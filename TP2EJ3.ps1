@@ -36,7 +36,7 @@ if($ruta -ne $true)
     
     $FileSystemWatcher = New-Object System.IO.FileSystemWatcher
     $FileSystemWatcher.Path  = $PathToMonitor
-    $FileSystemWatcher.IncludeSubdirectories = $true
+    $FileSystemWatcher.IncludeSubdirectories = $false
     
     # make sure the watcher emits events
     $FileSystemWatcher.EnableRaisingEvents = $true
