@@ -16,8 +16,13 @@ Paramentros a enviar:
 El path del directorio puede ser una ruta tanto absoluta como relativa.
 
 .NOTES
-INTEGRANTES - TP2 - Ejercicio 6
- * Agustin Cocciardi - 40231779
+# ALUMNOS GRUPO 8 - Trabajo Practico 2
+# Ejercicio 3
+# 40231779 - Cocciardi, Agustin
+# 40078823 - Biscaia, Elías
+# 40388978 - Varela, Daniel
+# 37841788 - Sullca, Willian
+# 38056215 - Aguilera, Erik 
 #>
 
 Param( 
@@ -31,6 +36,8 @@ if($ruta -ne $true)
     }
 
     $PathToMonitor = Resolve-Path $Directorio
+
+    $actual = $PWD
 
     Set-Location $PathToMonitor
     
@@ -56,12 +63,12 @@ if($ruta -ne $true)
     
         #Write-Host "Archivo Nuevo ha sido creado"
         
-        $archivos= Get-ChildItem $PathToMonitor
+        $archivos= Get-ChildItem $Directorio
     
         $ArchivosATrabajar = @()
     
         for ($i = 0; $i -lt $archivos.Length; $i++) {
-            if ($archivos[$i].Name -match "^[a-z]*-[0-9]*.log") {
+            if ($archivos[$i].Name -match "^[a-z]*-[0-9]+(\.)log$") {
                 $ArchivosATrabajar += $archivos[$i]
             }
         }
@@ -126,14 +133,14 @@ if($ruta -ne $true)
         Register-ObjectEvent -InputObject $FileSystemWatcher -EventName Created -Action $Action -SourceIdentifier FSCreate
     }
     
-    Write-Host "Watching for changes to $PathToMonitor"
+    Write-Host "Esperando cambios en $PathToMonitor"
     
     try
     {
         do
         {
             Wait-Event -Timeout 1
-            Write-Host "." -NoNewline
+            #Write-Host "." -NoNewline
             
         } while ($true)
     }
@@ -141,6 +148,7 @@ if($ruta -ne $true)
     {
         # this gets executed when user presses CTRL+C
         # remove the event handlers
+        Set-Location $actual
         Unregister-Event -SourceIdentifier FSCreate
         # remove background jobs
         $handlers | Remove-Job
@@ -148,4 +156,5 @@ if($ruta -ne $true)
         $FileSystemWatcher.EnableRaisingEvents = $false
         $FileSystemWatcher.Dispose()
         "Event Handler disabled."
+        
     }
